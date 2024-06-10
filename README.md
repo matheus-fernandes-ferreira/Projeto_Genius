@@ -7,6 +7,5 @@ O projeto foi o desafio final da disciplina e o objetivo era aplicar os conheicm
 Embora o foco da disciplina era aprender a desenvolver algoritmos com JavaScript, usamos HTML5 e CSS3 para recriar este clássico.
 ## Demonstração
 
-Insira um gif ou um link de alguma demonstração
 
-https://github.com/matheus-fernandes-ferreira/Projeto_Genius/blob/main/Demonstra%C3%A7%C3%A3o.png
+![Demonstração](https://github.com/matheus-fernandes-ferreira/Projeto_Genius/assets/38989129/4ba678b5-1eee-4255-9d05-2ea16412f91e)
