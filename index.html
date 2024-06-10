@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Genius Game</title>
+</head>
+
+<body>
+    <section class="game-genius">
+       
+        <div id="painel">
+            <div id="placar">
+                <label id="rod">Pontuação</label>
+                <p id="pontos">0</p>
+                <label id="rod">Rodada</label>
+                <p id="rodada">0</p>
+            </div>
+
+            <div class="btn-start-reset">
+                <button onclick="iniciarJogo()" id="start">Start</button>
+                <button onclick="restGame()" id="reset">Reset</button>
+            </div>
+        </div>
+
+
+
+        <div id="conteudo">
+            <div class="container">
+                <div id="btn1" class="button"></div>
+                <div id="btn2" class="button"></div>
+                <div id="btn3" class="button"></div>
+                <div id="btn4" class="button"></div>
+            </div>
+        </div>
+    </section>
+
+    <script src="projetoGenius.js"></script>
+</body>
+
+</html>
