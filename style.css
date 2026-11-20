@@ -1,218 +1,214 @@
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
 
+:root {
+    --background: #181616;
+    --panel: #262427;
+    --surface: #041d25;
+    --accent: #37b311;
+    --accent-hover: #52d52a;
 }
 
 body {
-    background: #181616;
+    min-height: 100vh;
+    background: var(--background);
+    color: #fff;
     font-family: 'Courier New', Courier, monospace;
     font-size: 16pt;
 }
 
-
 .game-genius {
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    min-height: 100vh;
 }
 
 #painel {
     display: flex;
+    flex: 0 0 30%;
     flex-direction: column;
     align-items: center;
-    width: 30%x;
-    height: 100vh;
-    background-color: #262427;
-    padding-top: 50px;
+    min-height: 100vh;
+    padding: clamp(24px, 8vh, 64px) 24px;
+    background-color: var(--panel);
 }
 
-.btn-start-reset {
-    text-align: center;
+#painel h1 {
+    margin-bottom: clamp(24px, 8vh, 64px);
+    color: var(--accent);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
 }
 
 #placar {
-    padding-bottom: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: min(100%, 220px);
+    margin-bottom: clamp(32px, 8vh, 80px);
 }
 
-#rod {
+.score-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.label-placar {
+    color: var(--accent);
+    font-size: 1rem;
     text-align: center;
-    margin-left: 30px;
-    margin-bottom: auto;
-    text-decoration: none;
-    color: #37b311;
 }
 
+#pontos,
 #rodada {
-    color: #fff;
-    background-color: #041d25;
-    padding-left: 20px;
-    padding-top: 20px;
-    width: 200px;
-    height: 35px;
-    margin-top: 1px;
-    margin-left: 10px;
+    width: 100%;
+    padding: 10px 16px;
     border: 2px solid #3b6b0d;
     border-radius: 25px;
+    background-color: var(--surface);
+    color: #fff;
+    text-align: center;
 }
 
-#pontos {
-    color: #ffffff;
-    background-color: #041d25;
-    padding-left: 20px;
-    padding-top: 20px;
-    width: 200px;
-    height: 35px;
-    margin-top: 1px;
-    margin-left: 10px;
-    border: 2px solid #3b6b0d;
-    border-radius: 25px;
+.btn-start-reset {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.btn-start-reset button {
+    min-width: 120px;
+    min-height: 44px;
+    padding: 8px 16px;
+    border: 0;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.85rem;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-start-reset button:hover,
+.btn-start-reset button:focus-visible {
+    transform: translateY(-2px);
 }
 
 #start {
-    /* background: #37b311; */
-    background: #fff;
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    height: auto;
-    width: 100px;
-    height: 40px;
-    text-align: center;
+    background: var(--accent);
 }
 
-#start:hover {
-    background: #bbff83;
+#start:hover,
+#start:focus-visible {
+    background: var(--accent-hover);
 }
 
 #reset {
     background: #b31111;
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    width: 100px;
-    height: 40px;
 }
 
-#reset:hover {
-    background: #ff5c5c;
+#reset:hover,
+#reset:focus-visible {
+    background: #e13b3b;
 }
-
-
-
 
 #conteudo {
     display: flex;
-    width: 70%;
-    height: 100vh;
-    justify-content: center;
+    flex: 1;
+    min-width: 0;
+    min-height: 100vh;
     align-items: center;
+    justify-content: center;
+    padding: 24px;
 }
-
 
 .container {
-    width: 500px;
-    flex-wrap: wrap;
-    display: flex;
-    align-items: center;
-    align-content: center;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: min(90vw, 500px);
+    aspect-ratio: 1;
+    gap: clamp(6px, 1vw, 12px);
 }
 
+.button {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    cursor: pointer;
+    transition: filter 0.2s ease, transform 0.2s ease;
+}
 
+.button:hover,
+.button:focus-visible {
+    filter: brightness(1.35);
+    transform: scale(1.02);
+}
 
-#btn1 {
-    width: 200px;
-    height: 200px;
-    margin-left: 40px;
-    margin-bottom: 10px;
-    border-bottom-right-radius: 50%;
+.button:active,
+.button.is-lit {
+    filter: brightness(2);
+}
+
+.green {
     border-top-left-radius: 100%;
-    background-color: green;
-
+    border-bottom-right-radius: 50%;
+    background-color: #168c16;
 }
 
-#btn2 {
-    width: 200px;
-    height: 200px;
-    margin-left: 10px;
-    margin-bottom: 10px;
-    border-bottom-left-radius: 50%;
+.yellow {
     border-top-right-radius: 100%;
-    background-color: yellow;
-
+    border-bottom-left-radius: 50%;
+    background-color: #d6c900;
 }
 
-#btn3 {
-    width: 200px;
-    height: 200px;
-    margin-left: 40px;
-    border-top-right-radius: 50%;
+.red {
     border-bottom-left-radius: 100%;
-    background-color: red;
+    border-top-right-radius: 50%;
+    background-color: #c51b1b;
 }
 
-#btn4 {
-    width: 200px;
-    height: 200px;
-    margin-left: 10px;
-    border-top-left-radius: 50%;
+.blue {
     border-bottom-right-radius: 100%;
-    background-color: blue;
-}
-
-
-
-
-#btn1:active {
-    background-color: rgb(12, 48, 8);
-    transition: 0.5s;
-}
-
-#btn2:active {
-    background-color: rgb(70, 70, 19);
-    transition: 0.5s;
-}
-
-#btn3:active {
-    background-color: rgb(88, 13, 13);
-    transition: 0.5s;
-}
-
-#btn4:active {
-    background-color: rgb(22, 19, 70);
-    transition: 0.5s;
-}
-
-#btn1:hover {
-    background-color: rgb(91, 255, 91)
-}
-
-#btn2:hover {
-    background-color: rgb(255, 255, 149);
-}
-
-#btn3:hover {
-    background-color: rgb(255, 99, 99);
-}
-
-#btn4:hover {
-    background-color: rgb(112, 112, 254);
+    border-top-left-radius: 50%;
+    background-color: #243fc4;
 }
 
 @media (max-width: 720px) {
     .game-genius {
-        flex-direction: column-reverse;
+        flex-direction: column;
     }
 
     #painel {
-        width: 100vw;
-        height: 200px;
-        padding-top: 5px;
+        width: 100%;
+        min-height: auto;
+        padding: 24px 16px;
     }
-#placar{
-    flex-direction: row;
-    width: 100vw;
-    margin: 20px;
+
+    #painel h1 {
+        margin-bottom: 20px;
+    }
+
+    #placar {
+        flex-direction: row;
+        width: min(100%, 460px);
+        margin-bottom: 20px;
+    }
+
+    #conteudo {
+        min-height: auto;
+        padding: 32px 16px 48px;
+    }
 }
+
+@media (max-width: 420px) {
+    body {
+        font-size: 14pt;
+    }
+
+    .btn-start-reset button {
+        min-width: 110px;
+    }
 }

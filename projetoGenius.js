@@ -3,18 +3,23 @@ var nivel = 1;
 var pontuacao = 0;
 var vetor = [1, 2, 3, 4];
 var sequenciaDoJogador = [];
+var sequenciaMaquina = [];
 var alerta = document.getElementById('pontos');
 var rodada = document.getElementById('rodada');
+var botoes = document.querySelectorAll('.button');
+var botaoStart = document.getElementById('start');
+var botaoReset = document.getElementById('reset');
 
 function gerarNumeroAleatorio() {
     return vetor[Math.floor(Math.random() * vetor.length)];
 }
-restGame()
-sequenciaMaquina = []; 
+
 function iniciarJogo() {
-    //for (let i = 0; i < nivel; i++) {
-         sequenciaMaquina.push(gerarNumeroAleatorio());
-   // }
+    if (sequenciaDoJogador.length > 0) {
+        return;
+    }
+
+    sequenciaMaquina.push(gerarNumeroAleatorio());
     exibirSequencia();
 }
 
@@ -31,17 +36,16 @@ function exibirSequencia() {
 
 function piscar(numero) {
     var btn = document.getElementById('btn' + numero);
-    var corOriginal = btn.style.backgroundColor;
-    btn.style.backgroundColor = "white";
+    btn.classList.add('is-lit');
     setTimeout(function() {
-        btn.style.backgroundColor = corOriginal;
+        btn.classList.remove('is-lit');
     }, 500);
 }
 
-document.querySelectorAll('.button').forEach(button => {
+botoes.forEach(function(button) {
     button.addEventListener('click', function() {
-        var numero = this.id.replace('btn', '');
-        sequenciaDoJogador.push(parseInt(numero, 10));
+        var numero = parseInt(this.id.replace('btn', ''), 10);
+        sequenciaDoJogador.push(numero);
         if (sequenciaDoJogador.length === sequenciaMaquina.length) {
             verificarSequencia();
         }
@@ -49,8 +53,10 @@ document.querySelectorAll('.button').forEach(button => {
 });
 
 function verificarSequencia() {
-    let acertou = sequenciaDoJogador.every((element, index) => element === sequenciaMaquina[index]);
-    sequenciaDoJogador = []; // Resetar para a próxima rodada
+    var acertou = sequenciaDoJogador.every(function(element, index) {
+        return element === sequenciaMaquina[index];
+    });
+    sequenciaDoJogador = [];
     if (acertou) {
         rodada.innerHTML = nivel;
         nivel++;
@@ -58,19 +64,20 @@ function verificarSequencia() {
         alerta.innerHTML = pontuacao;
         iniciarJogo();
     } else {
-        alerta.innerHTML = pontuacao
-        // Reiniciar jogo ou parar aqui
-        alert('Que Pena, você errou! Tente novamente')
-        restGame()
+        alert('Que pena, você errou! Tente novamente.');
+        resetGame();
     }
 }
 
-function restGame()
-{
-    nivel = 0;
+function resetGame() {
+    nivel = 1;
     pontuacao = 0;
-    exibir = 0;
+    sequenciaDoJogador = [];
     sequenciaMaquina = [];
-    rodada.innerHTML = nivel;
+    rodada.innerHTML = 0;
     alerta.innerHTML = pontuacao;
 }
+
+botaoStart.addEventListener('click', iniciarJogo);
+botaoReset.addEventListener('click', resetGame);
+resetGame();
