@@ -70,7 +70,8 @@ body {
 }
 
 #start {
-    background: #37b311;
+    /* background: #37b311; */
+    background: #fff;
     color: #fff;
     border: none;
     border-radius: 10px;
