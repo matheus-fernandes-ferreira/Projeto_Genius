@@ -1,0 +1,437 @@
+<title>Genius Arcade</title>
+<meta name="description" content="A experiência arcade oficial do jogo Genius 2.0.">
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+  /* Arcade premium: painel de comando compacto, tabuleiro como protagonista e estados muito legíveis. */
+  :root {
+    --bg: #090d16;
+    --bg-raised: #111827;
+    --surface: rgba(18, 27, 43, .82);
+    --surface-strong: #182338;
+    --surface-soft: rgba(255, 255, 255, .055);
+    --line: rgba(190, 210, 239, .15);
+    --text: #f2f6ff;
+    --muted: #9eabc2;
+    --quiet: #6e7c96;
+    --accent: #92a9ff;
+    --good: #5ee6a0;
+    --warning: #ffd86b;
+    --danger: #ff7186;
+    --green: #2fdb79;
+    --yellow: #ffd447;
+    --red: #ff526d;
+    --blue: #3d8dff;
+    --shadow: rgba(0, 0, 0, .48);
+    --font-display: "Space Grotesk", "Segoe UI", sans-serif;
+    --font-body: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { min-height: 100%; background: var(--bg); }
+  body {
+    min-height: 100%;
+    margin: 0;
+    padding-block: 28px 34px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    overflow-x: hidden;
+    color: var(--text);
+    background:
+      radial-gradient(760px 580px at 78% 42%, rgba(58, 85, 156, .23), transparent 68%),
+      radial-gradient(500px 420px at 14% 86%, rgba(38, 111, 84, .14), transparent 70%),
+      var(--bg);
+    font-family: var(--font-body);
+  }
+
+  button { font: inherit; }
+  button, a { -webkit-tap-highlight-color: transparent; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+
+  .preview-bar {
+    width: min(1160px, 100%);
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    color: var(--quiet);
+    font: 700 .68rem var(--font-mono);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+  .preview-bar strong { color: var(--accent); font-weight: 700; }
+  .preview-bar a { color: var(--muted); text-decoration: none; }
+  .preview-bar a:hover { color: var(--text); }
+  .home-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 9px 15px;
+    border: 1px solid var(--line);
+    border-radius: 11px;
+    color: var(--muted);
+    background: rgba(255,255,255,.035);
+    font: 700 .72rem var(--font-body);
+    letter-spacing: .02em;
+    text-decoration: none;
+    text-transform: none;
+    transition: transform .18s ease, border-color .18s ease, color .18s ease, background .18s ease;
+  }
+  .home-link:hover, .home-link:focus-visible {
+    color: var(--text);
+    background: rgba(255,255,255,.08);
+    border-color: rgba(190, 210, 239, .32);
+    transform: translateY(-2px);
+  }
+
+  .app {
+    width: min(1160px, 100%);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(270px, 330px) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(34px, 6vw, 82px);
+  }
+
+  .panel { min-width: 0; }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font: 700 .69rem var(--font-mono);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--good);
+    box-shadow: 0 0 14px rgba(94, 230, 160, .8);
+  }
+  h1 {
+    max-width: 7ch;
+    margin: 14px 0 10px;
+    color: var(--text);
+    font: 700 clamp(3.3rem, 5vw, 4.8rem)/.88 var(--font-display);
+    letter-spacing: -.08em;
+    text-wrap: balance;
+  }
+  h1 span {
+    display: block;
+    color: var(--accent);
+    font-size: .45em;
+    letter-spacing: -.04em;
+  }
+  .sub {
+    max-width: 27ch;
+    margin: 0;
+    color: var(--muted);
+    font-size: .96rem;
+    line-height: 1.55;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 30px;
+  }
+  .stat {
+    min-width: 0;
+    padding: 13px 12px 12px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface-soft);
+  }
+  .stat span {
+    display: block;
+    overflow: hidden;
+    color: var(--quiet);
+    font: 700 .58rem var(--font-mono);
+    letter-spacing: .08em;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .stat b {
+    display: block;
+    margin-top: 7px;
+    color: var(--text);
+    font: 700 1.6rem/1 var(--font-display);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat:first-child b { color: var(--good); }
+  .stat:last-child b { color: var(--warning); }
+
+  .actions { display: grid; gap: 10px; margin-top: 20px; }
+  .btn {
+    min-height: 50px;
+    border: 1px solid var(--line);
+    border-radius: 13px;
+    color: var(--text);
+    background: var(--surface-soft);
+    cursor: pointer;
+    font-weight: 750;
+    transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+  }
+  .btn.primary {
+    border-color: transparent;
+    color: #06120d;
+    background: linear-gradient(135deg, #7df0ad, #37cf79);
+    box-shadow: 0 10px 24px rgba(47, 219, 121, .16);
+  }
+  .btn.secondary { color: var(--muted); background: transparent; }
+  .btn:hover { transform: translateY(-2px); border-color: rgba(190, 210, 239, .32); }
+  .btn.primary:hover { box-shadow: 0 14px 28px rgba(47, 219, 121, .24); }
+  .btn:active { transform: translateY(0) scale(.98); }
+  .hint {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 7px;
+    margin: 18px 0 0;
+    color: var(--quiet);
+    font-size: .76rem;
+    line-height: 1.5;
+  }
+  kbd {
+    min-width: 22px;
+    padding: 3px 5px;
+    border: 1px solid var(--line);
+    border-bottom-width: 2px;
+    border-radius: 5px;
+    color: var(--muted);
+    background: rgba(255,255,255,.035);
+    font: 700 .68rem var(--font-mono);
+    text-align: center;
+  }
+
+  .stage { min-width: 0; display: grid; place-items: center; }
+  .game-wrap { width: min(100%, 650px); }
+  .game-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin: 0 4px 14px;
+    color: var(--quiet);
+    font: 700 .7rem var(--font-mono);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  .game-meta strong { color: var(--muted); font-weight: 700; }
+  .game-meta span { color: var(--accent); }
+
+  .board {
+    position: relative;
+    display: grid;
+    grid-template: 1fr 1fr / 1fr 1fr;
+    gap: clamp(9px, 1.4vw, 14px);
+    width: min(100%, 610px, calc(100vw - 40px), calc(100vh - 140px));
+    max-width: 100%;
+    aspect-ratio: 1;
+    padding: clamp(10px, 1.7vw, 16px);
+    border: 1px solid rgba(190, 210, 239, .19);
+    border-radius: 50%;
+    background: linear-gradient(145deg, rgba(30, 44, 70, .92), rgba(10, 16, 28, .94));
+    box-shadow: 0 34px 74px var(--shadow), inset 0 1px 0 rgba(255,255,255,.07), 0 0 0 10px rgba(255,255,255,.018);
+  }
+  .pad {
+    --pad-color: var(--green);
+    position: relative;
+    min-width: 0;
+    padding: 0;
+    border: 1px solid rgba(255,255,255,.1);
+    cursor: pointer;
+    background: linear-gradient(145deg, color-mix(in srgb, var(--pad-color) 66%, #19243a), color-mix(in srgb, var(--pad-color) 42%, #07101c));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.14), inset 0 -18px 34px rgba(0,0,0,.12);
+    transition: filter .15s ease, box-shadow .15s ease, transform .15s ease, border-color .15s ease;
+  }
+  .pad[data-i="0"] { --pad-color: var(--green); border-radius: 100% 16% 16% 16%; }
+  .pad[data-i="1"] { --pad-color: var(--yellow); border-radius: 16% 100% 16% 16%; }
+  .pad[data-i="2"] { --pad-color: var(--red); border-radius: 16% 16% 16% 100%; }
+  .pad[data-i="3"] { --pad-color: var(--blue); border-radius: 16% 16% 100% 16%; }
+  .pad:hover, .pad:focus-visible {
+    z-index: 1;
+    border-color: rgba(255,255,255,.42);
+    filter: brightness(1.16) saturate(1.15);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 0 24px color-mix(in srgb, var(--pad-color) 25%, transparent);
+    transform: scale(1.012);
+  }
+  .pad.on {
+    z-index: 2;
+    border-color: rgba(255,255,255,.65);
+    filter: brightness(1.65) saturate(1.25);
+    box-shadow: 0 0 70px 8px var(--pad-color), inset 0 0 42px rgba(255,255,255,.34);
+    transform: scale(1.025);
+  }
+  .pad i {
+    position: absolute;
+    padding: 4px 7px;
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 6px;
+    color: rgba(255,255,255,.78);
+    background: rgba(0,0,0,.24);
+    font: 700 .72rem var(--font-mono);
+    font-style: normal;
+  }
+  .pad[data-i="0"] i { top: 15%; left: 15%; }
+  .pad[data-i="1"] i { top: 15%; right: 15%; }
+  .pad[data-i="2"] i { bottom: 15%; left: 15%; }
+  .pad[data-i="3"] i { right: 15%; bottom: 15%; }
+  .board.lock .pad { cursor: default; }
+  .board.lock .pad:hover { transform: none; filter: none; box-shadow: inset 0 1px 0 rgba(255,255,255,.14), inset 0 -18px 34px rgba(0,0,0,.12); }
+  .board.lock .pad:focus-visible { filter: brightness(1.16) saturate(1.15); transform: scale(1.012); }
+
+  .hub {
+    position: absolute;
+    z-index: 3;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 35%;
+    aspect-ratio: 1;
+    margin: auto;
+    padding: 10px;
+    border: 1px solid rgba(190, 210, 239, .22);
+    border-radius: 50%;
+    color: var(--text);
+    background: radial-gradient(circle at 34% 24%, #223252, #0b111d 72%);
+    box-shadow: 0 0 0 9px rgba(13, 20, 34, .7), 0 16px 35px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.1);
+    pointer-events: none;
+    text-align: center;
+  }
+  .hub small { color: var(--quiet); font: 700 .58rem var(--font-mono); letter-spacing: .14em; text-transform: uppercase; }
+  .hub strong { margin-top: 5px; font: 700 clamp(2rem, 5vw, 3.5rem)/.9 var(--font-display); font-variant-numeric: tabular-nums; }
+  .hub p { display: flex; align-items: center; gap: 7px; margin: 10px 0 0; color: var(--muted); font-size: clamp(.66rem, 1.5vw, .84rem); }
+  .dot { width: 7px; height: 7px; flex: 0 0 auto; border-radius: 50%; background: var(--quiet); }
+  .hub[data-s="watch"] .dot { background: var(--warning); box-shadow: 0 0 12px var(--warning); animation: pulse 1s infinite; }
+  .hub[data-s="turn"] .dot { background: var(--good); box-shadow: 0 0 12px var(--good); animation: pulse .8s infinite; }
+  .hub[data-s="over"] .dot { background: var(--danger); box-shadow: 0 0 12px var(--danger); }
+  .board.shake { animation: shake .45s; }
+  @keyframes pulse { 50% { opacity: .32; transform: scale(1.45); } }
+  @keyframes shake { 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
+
+  @media (max-width: 820px) {
+    body { padding-block: 20px 26px; }
+    .preview-bar { margin-bottom: 24px; }
+    .app { grid-template-columns: 1fr; gap: 30px; }
+    .panel { text-align: center; }
+    .eyebrow, .hint { justify-content: center; }
+    h1 { max-width: none; margin-top: 12px; }
+    .sub { margin-inline: auto; }
+    .stats { max-width: 520px; margin-inline: auto; margin-top: 22px; }
+    .actions { max-width: 520px; margin-inline: auto; grid-template-columns: 1fr 1fr; }
+    .hint { display: none; }
+    .game-wrap { width: min(100%, 560px); }
+  }
+  @media (max-width: 480px) {
+    .preview-bar { align-items: flex-start; font-size: .58rem; }
+    .preview-bar a { display: none; }
+    h1 { font-size: 3.25rem; }
+    .sub { font-size: .89rem; }
+    .stats { gap: 6px; }
+    .stat { padding: 11px 8px; }
+    .stat b { font-size: 1.35rem; }
+    .actions { grid-template-columns: 1fr; }
+    .board { width: min(100%, calc(100vw - 32px)); }
+    .hub { width: 38%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+<main>
+  <div class="preview-bar">
+    <span><strong>Genius Arcade</strong> · experiência oficial</span>
+    <a class="home-link" href="index.html">← Voltar para a página principal</a>
+  </div>
+
+  <div class="app">
+    <section class="panel" aria-label="Controles e placar">
+      <div class="eyebrow">Genius 2.0 · modo clássico</div>
+      <h1>Genius <span>Arcade</span></h1>
+      <p class="sub">Observe o ritmo. Repita a sequência. Avance uma rodada por vez.</p>
+
+      <div class="stats" aria-label="Estatísticas da partida">
+        <div class="stat"><span>Pontuação</span><b id="score">0</b></div>
+        <div class="stat"><span>Rodada</span><b id="round">0</b></div>
+        <div class="stat"><span>Recorde</span><b id="best">0</b></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="start" type="button">Começar partida</button>
+        <button class="btn secondary" id="reset" type="button">Reiniciar placar</button>
+      </div>
+
+      <p class="hint">Teclas rápidas: <kbd>Q</kbd><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd> ou <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd></p>
+    </section>
+
+    <section class="stage" aria-label="Área de jogo">
+      <div class="game-wrap">
+        <div class="game-meta"><strong>Sequência atual</strong><span id="phase">Aguardando início</span></div>
+        <div class="board lock" id="board" role="group" aria-label="Tabuleiro com quatro cores">
+          <button class="pad" data-i="0" type="button" aria-label="Verde"><i>Q · 1</i></button>
+          <button class="pad" data-i="1" type="button" aria-label="Amarelo"><i>W · 2</i></button>
+          <button class="pad" data-i="2" type="button" aria-label="Vermelho"><i>A · 3</i></button>
+          <button class="pad" data-i="3" type="button" aria-label="Azul"><i>S · 4</i></button>
+          <div class="hub" id="hub" data-s="idle">
+            <small>Rodada</small><strong id="hubRound">0</strong>
+            <p role="status" aria-live="polite"><span class="dot"></span><span id="status">Pronto para jogar</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+<script>
+(function () {
+  var get = function (id) { return document.getElementById(id); };
+  var pads = Array.prototype.slice.call(document.querySelectorAll('.pad'));
+  var board = get('board');
+  var hub = get('hub');
+  var frequencies = [415, 310, 252, 209];
+  var keys = { q: 0, '1': 0, w: 1, '2': 1, a: 2, '3': 2, s: 3, '4': 3 };
+  var sequence = [], playerIndex = 0, score = 0, round = 0, best = 0, isPlayerTurn = false, token = 0, audioContext = null;
+  try { best = parseInt(localStorage.getItem('genius-best'), 10) || 0; } catch (error) { best = 0; }
+  get('best').textContent = best;
+  function sleep(ms) { return new Promise(function (resolve) { setTimeout(resolve, ms); }); }
+  function playTone(index, duration, type) {
+    try {
+      audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
+      if (audioContext.state === 'suspended') { audioContext.resume(); }
+      var oscillator = audioContext.createOscillator(), gain = audioContext.createGain(), start = audioContext.currentTime;
+      oscillator.type = type || 'sine'; oscillator.frequency.value = index < 0 ? 110 : frequencies[index];
+      gain.gain.setValueAtTime(.0001, start); gain.gain.exponentialRampToValueAtTime(.22, start + .02); gain.gain.exponentialRampToValueAtTime(.0001, start + duration / 1000);
+      oscillator.connect(gain); gain.connect(audioContext.destination); oscillator.start(start); oscillator.stop(start + duration / 1000 + .05);
+    } catch (error) {}
+  }
+  function flash(index, duration) {
+    pads[index].classList.add('on'); playTone(index, duration);
+    return sleep(duration).then(function () { pads[index].classList.remove('on'); });
+  }
+  function updateUi(state, message) {
+    hub.dataset.s = state; get('status').textContent = message; get('phase').textContent = state === 'watch' ? 'Observe a sequência' : state === 'turn' ? 'Sua vez de jogar' : state === 'over' ? 'Partida encerrada' : 'Aguardando início';
+    get('score').textContent = score; get('round').textContent = round; get('hubRound').textContent = round; isPlayerTurn = state === 'turn'; board.classList.toggle('lock', !isPlayerTurn);
+  }
+  function resetGame() {
+    token += 1; sequence = []; playerIndex = 0; score = 0; round = 0; pads.forEach(function (pad) { pad.classList.remove('on'); }); updateUi('idle', 'Pronto para jogar'); get('start').textContent = 'Começar partida';
+  }
+  function startGame() { if (audioContext && audioContext.state === 'suspended') { audioContext.resume(); } resetGame(); get('start').textContent = 'Partida em andamento'; nextRound(); }
+  function nextRound() { var currentToken = token; round += 1; playerIndex = 0; sequence.push(Math.floor(Math.random() * 4)); updateUi('watch', 'Observe'); sleep(650).then(function () { playSequence(currentToken); }); }
+  async function playSequence(currentToken) { var duration = Math.max(230, 620 - round * 22); for (var index = 0; index < sequence.length; index += 1) { if (currentToken !== token) return; await flash(sequence[index], duration); await sleep(duration * .45); } if (currentToken === token) updateUi('turn', 'Sua vez'); }
+  function pressPad(index) { if (!isPlayerTurn) return; var currentToken = token; flash(index, 260); if (index !== sequence[playerIndex]) { gameOver(); return; } playerIndex += 1; score += 10; get('score').textContent = score; if (playerIndex === sequence.length) { isPlayerTurn = false; board.classList.add('lock'); updateUi('turn', 'Boa!'); sleep(800).then(function () { if (currentToken === token) nextRound(); }); } }
+  function gameOver() { token += 1; isPlayerTurn = false; playTone(-1, 600, 'sawtooth'); if (score > best) { best = score; get('best').textContent = best; try { localStorage.setItem('genius-best', best); } catch (error) {} } updateUi('over', 'Fim de jogo · ' + score + ' pts'); board.classList.remove('shake'); void board.offsetWidth; board.classList.add('shake'); get('start').textContent = 'Jogar novamente'; }
+  pads.forEach(function (pad) { var index = Number(pad.dataset.i); pad.addEventListener('pointerdown', function (event) { event.preventDefault(); pressPad(index); }); pad.addEventListener('click', function (event) { if (event.detail === 0) pressPad(index); }); });
+  document.addEventListener('keydown', function (event) { if (event.repeat || event.ctrlKey || event.metaKey || event.altKey) return; var index = keys[event.key.toLowerCase()]; if (index !== undefined) { event.preventDefault(); pressPad(index); } });
+  get('start').addEventListener('click', startGame); get('reset').addEventListener('click', resetGame); resetGame();
+}());
+</script>
